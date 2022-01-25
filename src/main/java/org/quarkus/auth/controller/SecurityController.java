@@ -1,5 +1,8 @@
 package org.quarkus.auth.controller;
 
+import io.quarkus.qute.Location;
+import io.quarkus.qute.Template;
+import io.quarkus.qute.TemplateInstance;
 import org.quarkus.auth.entity.User;
 
 import javax.ws.rs.GET;
@@ -12,6 +15,15 @@ import java.util.List;
 
 @Path("/users")
 public class SecurityController {
+
+    @Location("home")
+    Template homeTemplate;
+
+    @GET
+    @Path("/home")
+    public TemplateInstance home() {
+        return homeTemplate.data("home");
+    }
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
