@@ -19,10 +19,19 @@ public class SecurityController {
     @Location("home")
     Template homeTemplate;
 
+    @Location("login")
+    Template loginTemplate;
+
     @GET
     @Path("/home")
     public TemplateInstance home() {
         return homeTemplate.data("home");
+    }
+
+    @GET
+    @Path("/login")
+    public TemplateInstance login() {
+        return loginTemplate.data("login");
     }
 
     @GET
