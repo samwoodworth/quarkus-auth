@@ -11,6 +11,7 @@ public class User extends PanacheEntity {
 
     private String userName;
     private String password;
+    private String role;
     private boolean loggedIn;
 
     public String getUserName() {
@@ -35,5 +36,13 @@ public class User extends PanacheEntity {
 
     public void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

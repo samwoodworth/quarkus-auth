@@ -5,6 +5,8 @@ import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import org.quarkus.auth.entity.User;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -57,6 +59,7 @@ public class SecurityController {
 
     @GET
     @Path("get_users")
+    @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
         List<User> users = User.listAll();
@@ -65,6 +68,7 @@ public class SecurityController {
 
     @GET
     @Path("get_user/{id}")
+    @RolesAllowed("ADMIN")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getById(@PathParam("id") Long id) {
         User foundUser = User.findById(id);

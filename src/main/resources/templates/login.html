@@ -5,6 +5,15 @@
     <title>Login</title>
 </head>
     <body>
-        <p>Login page</p>
+        <form action="j_security_check" method="post">
+            <div class="container">
+                <input type="text" placeholder="Enter Username" name="j_username" required>
+
+                <input type="password" placeholder="Enter Password" name="j_password" required>
+
+                <button type="submit">Login</button>
+
+            </div>
+        </form>
     </body>
 </html>
