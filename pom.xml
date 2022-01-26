@@ -79,6 +79,15 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${compiler-plugin.version}</version>
+        <configuration>
+          <compilerArgs>
+            <arg>-parameters</arg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <profiles>
