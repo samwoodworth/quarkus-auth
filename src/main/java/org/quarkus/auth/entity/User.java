@@ -1,18 +1,34 @@
 package org.quarkus.auth.entity;
 
 
+import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.security.jpa.Password;
+import io.quarkus.security.jpa.Roles;
+import io.quarkus.security.jpa.UserDefinition;
+import io.quarkus.security.jpa.Username;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 
 @Entity
+@UserDefinition
 public class User extends PanacheEntity {
 
+    @Username
     private String userName;
-    private String password;
-    private String role;
-    private boolean loggedIn;
+    @Password
+    String password;
+    @Roles
+    String role;
+
+    public static void add(String userName, String password, String role) {
+        User user = new User();
+        user.userName = userName;
+        user.password = BcryptUtil.bcryptHash(password);
+        user.role = role;
+        user.persist();
+    }
 
     public String getUserName() {
         return userName;
@@ -28,14 +44,6 @@ public class User extends PanacheEntity {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public boolean isLoggedIn() {
-        return loggedIn;
-    }
-
-    public void setLoggedIn(boolean loggedIn) {
-        this.loggedIn = loggedIn;
     }
 
     public String getRole() {

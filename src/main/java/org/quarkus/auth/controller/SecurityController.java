@@ -30,24 +30,24 @@ public class SecurityController {
     Template loggedinTemplate;
 
     @GET
+    @PermitAll
     @Path("home")
-    public TemplateInstance home(@Context SecurityContext securityContext) {
-/*        String name = securityContext.getUserPrincipal().getName();
-        if (name != null)
-            System.out.println("Not null");*/
-
+    public TemplateInstance home(@Context SecurityContext sec) {
         return homeTemplate.data("name");
     }
 
     @GET
+    @PermitAll
     @Path("login")
-    public TemplateInstance login() {
+    public TemplateInstance login(@Context SecurityContext sec) {
         return loginTemplate.data("login");
     }
 
     @GET
+    @RolesAllowed({"user", "admin"})
     @Path("loggedin")
-    public TemplateInstance loggedin() {
+    public TemplateInstance loggedin(@Context SecurityContext sec) {
+        System.out.println(sec.getUserPrincipal().getName());
         return loggedinTemplate.data("loggedin");
     }
 
