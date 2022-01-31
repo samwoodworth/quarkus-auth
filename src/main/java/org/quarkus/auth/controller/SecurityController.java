@@ -33,6 +33,11 @@ public class SecurityController {
     @PermitAll
     @Path("home")
     public TemplateInstance home(@Context SecurityContext sec) {
+        if (sec.getUserPrincipal() != null) {
+            String name = sec.getUserPrincipal().getName();
+            System.out.println(name);
+        } else
+            System.out.println("Null");
         return homeTemplate.data("name");
     }
 
@@ -48,6 +53,7 @@ public class SecurityController {
     @Path("loggedin")
     public TemplateInstance loggedin(@Context SecurityContext sec) {
         System.out.println(sec.getUserPrincipal().getName());
+
         return loggedinTemplate.data("loggedin");
     }
 

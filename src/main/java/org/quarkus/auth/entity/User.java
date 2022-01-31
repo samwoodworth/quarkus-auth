@@ -25,7 +25,8 @@ public class User extends PanacheEntity {
     public static void add(String userName, String password, String role) {
         User user = new User();
         user.userName = userName;
-        user.password = BcryptUtil.bcryptHash(password);
+        //user.password = BcryptUtil.bcryptHash(password);
+        user.password = password;
         user.role = role;
         user.persist();
     }
