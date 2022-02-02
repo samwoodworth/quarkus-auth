@@ -29,23 +29,17 @@ public class SecurityController {
     @GET
     @Path("isAuth")
     @PermitAll
-    public boolean isAuth(@QueryParam("user") String username, @Context SecurityContext sec) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response isAuth(@QueryParam("user") String username, @Context SecurityContext sec) {
         //Username exists
         long num = User.count("username", username);
         if (num > 0) {      //Found user
             User foundUser = User.findByUserName(username);
             System.out.println("Logged in: " + foundUser.isLoggedIn());
-            if (!foundUser.isLoggedIn()) {
-                System.out.println("Role is: " + foundUser.getRole());
-                foundUser.setLoggedIn(true);
-                foundUser.persist();
-                return foundUser.isLoggedIn();
-            }
-            System.out.println("User " + foundUser.getUserName() + " already logged in.");
-            return true;
+            return Response.ok(foundUser.isLoggedIn()).build();
         } else {
             System.out.println("Not found");
-            return false;
+            return Response.status(404).build();
         }
     }
 
@@ -77,6 +71,7 @@ public class SecurityController {
         User foundUser = User.findByUserName(sec.getUserPrincipal().getName());
         System.out.println("Is name logged in: " + foundUser.isLoggedIn());
         foundUser.setLoggedIn(true);
+
         User.update("loggedIn = true where userName = ?1", foundUser.getUserName());
         System.out.println("Is logged in after change: " + foundUser.isLoggedIn());
         return loggedinTemplate.data("loggedin");
