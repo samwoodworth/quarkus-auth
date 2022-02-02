@@ -7,6 +7,7 @@ import org.quarkus.auth.entity.User;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
@@ -33,11 +34,12 @@ public class SecurityController {
         long num = User.count("username", username);
         if (num > 0) {      //Found user
             User foundUser = User.findByUserName(username);
-            if (foundUser.isLoggedIn()) {
+            System.out.println("Logged in: " + foundUser.isLoggedIn());
+            if (!foundUser.isLoggedIn()) {
                 System.out.println("Role is: " + foundUser.getRole());
                 foundUser.setLoggedIn(true);
                 foundUser.persist();
-                return true;
+                return foundUser.isLoggedIn();
             }
             System.out.println("User " + foundUser.getUserName() + " already logged in.");
             return true;
@@ -68,10 +70,15 @@ public class SecurityController {
 
     @GET
     @RolesAllowed({"user", "admin"})
+    @Transactional
     @Path("loggedin")
     public TemplateInstance loggedin(@Context SecurityContext sec) {
-        System.out.println(sec.getUserPrincipal().getName());
-
+        System.out.println("Name is : " + sec.getUserPrincipal().getName());
+        User foundUser = User.findByUserName(sec.getUserPrincipal().getName());
+        System.out.println("Is name logged in: " + foundUser.isLoggedIn());
+        foundUser.setLoggedIn(true);
+        User.update("loggedIn = true where userName = ?1", foundUser.getUserName());
+        System.out.println("Is logged in after change: " + foundUser.isLoggedIn());
         return loggedinTemplate.data("loggedin");
     }
 
