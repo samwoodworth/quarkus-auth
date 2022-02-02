@@ -7,17 +7,12 @@ import org.quarkus.auth.entity.User;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.util.List;
 
 @Path("/")
+//@RegisterRestClient
 public class SecurityController {
 
     @Location("home")
@@ -28,6 +23,29 @@ public class SecurityController {
 
     @Location("loggedin")
     Template loggedinTemplate;
+
+    //Assumes unique usernames
+    @GET
+    @Path("isAuth")
+    @PermitAll
+    public boolean isAuth(@QueryParam("user") String username, @Context SecurityContext sec) {
+        //Username exists
+        long num = User.count("username", username);
+        if (num > 0) {      //Found user
+            User foundUser = User.findByUserName(username);
+            if (foundUser.isLoggedIn()) {
+                System.out.println("Role is: " + foundUser.getRole());
+                foundUser.setLoggedIn(true);
+                foundUser.persist();
+                return true;
+            }
+            System.out.println("User " + foundUser.getUserName() + " already logged in.");
+            return true;
+        } else {
+            System.out.println("Not found");
+            return false;
+        }
+    }
 
     @GET
     @PermitAll
@@ -55,12 +73,6 @@ public class SecurityController {
         System.out.println(sec.getUserPrincipal().getName());
 
         return loggedinTemplate.data("loggedin");
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String test() {
-        return "works";
     }
 
     @GET
