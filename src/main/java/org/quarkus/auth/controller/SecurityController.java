@@ -39,7 +39,7 @@ public class SecurityController {
             return Response.ok(foundUser.isLoggedIn()).build();
         } else {
             System.out.println("Not found");
-            return Response.status(404).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
