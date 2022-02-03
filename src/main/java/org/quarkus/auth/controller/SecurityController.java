@@ -13,7 +13,6 @@ import javax.ws.rs.core.*;
 import java.util.List;
 
 @Path("/")
-//@RegisterRestClient
 public class SecurityController {
 
     @Location("home")
@@ -47,11 +46,11 @@ public class SecurityController {
     @PermitAll
     @Path("home")
     public TemplateInstance home(@Context SecurityContext sec) {
-        if (sec.getUserPrincipal() != null) {
+/*        if (sec.getUserPrincipal() != null) {
             String name = sec.getUserPrincipal().getName();
             System.out.println(name);
         } else
-            System.out.println("Null");
+            System.out.println("Null");*/
         return homeTemplate.data("name");
     }
 
