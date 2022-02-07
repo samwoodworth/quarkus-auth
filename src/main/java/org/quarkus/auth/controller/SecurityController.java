@@ -66,9 +66,11 @@ public class SecurityController {
     @Transactional
     @RolesAllowed({"user", "admin"})
     @Path("logout")
-    public Response logout(@QueryParam("username") String username) {
+    public Response logout(@Context SecurityContext sec, @QueryParam("username") String username) {
 
-        if (User.count("username", username) > 0) {
+        String credName = User.findByUserName(sec.getUserPrincipal().getName()).getUserName();
+
+        if (User.count("username", username) > 0 && credName.equals(username)) {
             User foundUser = User.findByUserName(username);
             User.update("loggedIn = false where userName = ?1", foundUser.getUserName());
             return Response.ok().build();
