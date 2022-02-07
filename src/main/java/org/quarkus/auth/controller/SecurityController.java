@@ -30,12 +30,10 @@ public class SecurityController {
     @Produces(MediaType.TEXT_PLAIN)
     public Response isAuth(@QueryParam("user") String username, @Context SecurityContext sec) {
         //Username exists
-        long num = User.count("username", username);
-        if (num > 0) {      //Found user
+        if (User.count("username", username) > 0) {
             User foundUser = User.findByUserName(username);
             return Response.ok(foundUser.isLoggedIn()).build();
         } else {
-            System.out.println("Not found");
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
@@ -60,8 +58,6 @@ public class SecurityController {
     @Path("loggedin")
     public TemplateInstance loggedin(@Context SecurityContext sec) {
         User foundUser = User.findByUserName(sec.getUserPrincipal().getName());
-        System.out.println("Founduser is: " + foundUser.getUserName());
-        foundUser.setLoggedIn(true);
         User.update("loggedIn = true where userName = ?1", foundUser.getUserName());
         return loggedinTemplate.data("loggedin");
     }
@@ -70,12 +66,10 @@ public class SecurityController {
     @Transactional
     @RolesAllowed({"user", "admin"})
     @Path("logout")
-    public Response logout(@Context SecurityContext sec) {
-        System.out.println("NAME is: " + sec.getUserPrincipal().getName());
-        User foundUser = User.findByUserName(sec.getUserPrincipal().getName());
-        System.out.println("Username is: " + foundUser);
-        if (foundUser.getUserName() != null) {
-            foundUser.setLoggedIn(false);
+    public Response logout(@QueryParam("username") String username) {
+
+        if (User.count("username", username) > 0) {
+            User foundUser = User.findByUserName(username);
             User.update("loggedIn = false where userName = ?1", foundUser.getUserName());
             return Response.ok().build();
         }
