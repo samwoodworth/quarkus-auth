@@ -10,7 +10,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.util.List;
 
 @Path("/")
 public class SecurityController {
@@ -34,7 +33,6 @@ public class SecurityController {
         long num = User.count("username", username);
         if (num > 0) {      //Found user
             User foundUser = User.findByUserName(username);
-            System.out.println("Logged in: " + foundUser.isLoggedIn());
             return Response.ok(foundUser.isLoggedIn()).build();
         } else {
             System.out.println("Not found");
@@ -46,11 +44,6 @@ public class SecurityController {
     @PermitAll
     @Path("home")
     public TemplateInstance home(@Context SecurityContext sec) {
-/*        if (sec.getUserPrincipal() != null) {
-            String name = sec.getUserPrincipal().getName();
-            System.out.println(name);
-        } else
-            System.out.println("Null");*/
         return homeTemplate.data("name");
     }
 
@@ -66,13 +59,9 @@ public class SecurityController {
     @Transactional
     @Path("loggedin")
     public TemplateInstance loggedin(@Context SecurityContext sec) {
-        System.out.println("Name is : " + sec.getUserPrincipal().getName());
         User foundUser = User.findByUserName(sec.getUserPrincipal().getName());
-        System.out.println("Is name logged in: " + foundUser.isLoggedIn());
         foundUser.setLoggedIn(true);
-
         User.update("loggedIn = true where userName = ?1", foundUser.getUserName());
-        System.out.println("Is logged in after change: " + foundUser.isLoggedIn());
         return loggedinTemplate.data("loggedin");
     }
 
@@ -81,16 +70,14 @@ public class SecurityController {
     @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
-        List<User> users = User.listAll();
-        return Response.ok(users).build();
+        return Response.ok(User.listAll()).build();
     }
 
     @GET
     @Path("get_user/{id}")
-    @RolesAllowed("ADMIN")
+    @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
     public Response getById(@PathParam("id") Long id) {
-        User foundUser = User.findById(id);
-        return Response.ok(foundUser).build();
+        return Response.ok(User.findById(id)).build();
     }
 }
