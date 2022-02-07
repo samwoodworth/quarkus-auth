@@ -60,9 +60,27 @@ public class SecurityController {
     @Path("loggedin")
     public TemplateInstance loggedin(@Context SecurityContext sec) {
         User foundUser = User.findByUserName(sec.getUserPrincipal().getName());
+        System.out.println("Founduser is: " + foundUser.getUserName());
         foundUser.setLoggedIn(true);
         User.update("loggedIn = true where userName = ?1", foundUser.getUserName());
         return loggedinTemplate.data("loggedin");
+    }
+
+    @GET
+    @Transactional
+    @RolesAllowed({"user", "admin"})
+    @Path("logout")
+    public Response logout(@Context SecurityContext sec) {
+        System.out.println("NAME is: " + sec.getUserPrincipal().getName());
+        User foundUser = User.findByUserName(sec.getUserPrincipal().getName());
+        System.out.println("Username is: " + foundUser);
+        if (foundUser.getUserName() != null) {
+            foundUser.setLoggedIn(false);
+            User.update("loggedIn = false where userName = ?1", foundUser.getUserName());
+            return Response.ok().build();
+        }
+        else
+            return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @GET
