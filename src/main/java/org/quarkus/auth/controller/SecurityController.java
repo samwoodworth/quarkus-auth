@@ -14,9 +14,6 @@ import javax.ws.rs.core.*;
 @Path("/")
 public class SecurityController {
 
-    @Location("home")
-    Template homeTemplate;
-
     @Location("login")
     Template loginTemplate;
 
@@ -36,13 +33,6 @@ public class SecurityController {
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-    }
-
-    @GET
-    @PermitAll
-    @Path("home")
-    public TemplateInstance home(@Context SecurityContext sec) {
-        return homeTemplate.data("name");
     }
 
     @GET
