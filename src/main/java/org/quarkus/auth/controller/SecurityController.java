@@ -14,6 +14,9 @@ import javax.ws.rs.core.*;
 @Path("/")
 public class SecurityController {
 
+    @Location("home")
+    Template homeTemplate;
+
     @Location("login")
     Template loginTemplate;
 
@@ -37,8 +40,15 @@ public class SecurityController {
 
     @GET
     @PermitAll
+    @Path("home")
+    public TemplateInstance home() {
+        return homeTemplate.data("name");
+    }
+
+    @GET
+    @PermitAll
     @Path("login")
-    public TemplateInstance login(@Context SecurityContext sec) {
+    public TemplateInstance login() {
         return loginTemplate.data("login");
     }
 
@@ -52,6 +62,7 @@ public class SecurityController {
         return loggedinTemplate.data("loggedin");
     }
 
+    //Have to use basic auth of account to logout
     @GET
     @Transactional
     @RolesAllowed({"user", "admin"})
@@ -59,7 +70,6 @@ public class SecurityController {
     public Response logout(@Context SecurityContext sec, @QueryParam("username") String username) {
 
         String credName = User.findByUserName(sec.getUserPrincipal().getName()).getUserName();
-
         if (User.count("username", username) > 0 && credName.equals(username)) {
             User foundUser = User.findByUserName(username);
             User.update("loggedIn = false where userName = ?1", foundUser.getUserName());
