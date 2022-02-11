@@ -23,13 +23,13 @@ public class User extends PanacheEntity {
     private String role;
     private boolean loggedIn;
 
-    public static void add(String userName, String password, String role, boolean loggedIn) {
-        User user = new User();
-        user.userName = userName;
-        user.password = BcryptUtil.bcryptHash(password);
-        user.role = role;
-        user.loggedIn = false;
-        user.persist();
+    public User() {}
+
+    public User(String userName, String password, String role, boolean loggedIn) {
+        this.userName = userName;
+        this.password = BcryptUtil.bcryptHash(password);
+        this.role = role;
+        this.loggedIn = loggedIn;
     }
 
     public static User findByUserName(String userName) {
