@@ -10,7 +10,7 @@ public class Startup {
     @Transactional
     public void loadUsers(@Observes StartupEvent evt) {
         User.deleteAll();
-        User.add("admin", "admin", "admin", false);
-        User.add("user", "user", "user", false);
+        User.persist(new User("admin", "admin", "admin", false));
+        User.persist(new User("user", "user", "user", false));
     }
 }
