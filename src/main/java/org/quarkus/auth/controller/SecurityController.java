@@ -30,9 +30,8 @@ public class SecurityController {
         if (User.count("username", username) > 0) {
             User foundUser = User.findByUserName(username);
             return Response.ok(foundUser.isLoggedIn()).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
         }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @GET
@@ -65,8 +64,7 @@ public class SecurityController {
             User.update("loggedIn = false where userName = ?1", foundUser.getUserName());
             return Response.ok().build();
         }
-        else
-            return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @GET
