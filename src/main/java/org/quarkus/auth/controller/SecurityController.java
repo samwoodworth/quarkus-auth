@@ -20,6 +20,9 @@ public class SecurityController {
     @Location("loggedin")
     Template loggedinTemplate;
 
+    @Location("error")
+    Template errorTemplate;
+
     @GET
     @Path("isAuth")
     @PermitAll
@@ -38,6 +41,13 @@ public class SecurityController {
     @Path("login")
     public TemplateInstance login() {
         return loginTemplate.data("");
+    }
+
+    @GET
+    @PermitAll
+    @Path("error")
+    public TemplateInstance error() {
+        return errorTemplate.data("");
     }
 
     //Add logout button to this page that cancels all cookies?
