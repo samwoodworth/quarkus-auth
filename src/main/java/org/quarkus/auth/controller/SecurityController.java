@@ -20,7 +20,6 @@ public class SecurityController {
     @Location("loggedin")
     Template loggedinTemplate;
 
-    //Assumes unique usernames
     @GET
     @Path("isAuth")
     @PermitAll
@@ -38,17 +37,21 @@ public class SecurityController {
     @PermitAll
     @Path("login")
     public TemplateInstance login() {
-        return loginTemplate.data("login");
+        return loginTemplate.data("");
     }
 
+    //Add logout button to this page that cancels all cookies?
     @GET
     @RolesAllowed({"user", "admin"})
     @Transactional
     @Path("loggedin")
     public TemplateInstance loggedin(@Context SecurityContext sec) {
         User foundUser = User.findByUserName(sec.getUserPrincipal().getName());
+        System.out.println("Username is: " + foundUser.getUserName());
         User.update("loggedIn = true where userName = ?1", foundUser.getUserName());
-        return loggedinTemplate.data("loggedin");
+        Cookie cookie = new Cookie("user", foundUser.getUserName());
+        System.out.println(cookie.getValue());
+        return loggedinTemplate.data("");
     }
 
     //Have to use basic auth of account to logout
@@ -64,12 +67,12 @@ public class SecurityController {
             User.update("loggedIn = false where userName = ?1", foundUser.getUserName());
             return Response.ok().build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.ok().build();
     }
 
     @GET
     @Path("get_users")
-    @PermitAll
+    @RolesAllowed({"user", "admin"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
         return Response.ok(User.listAll()).build();
