@@ -22,7 +22,6 @@ Log in with either the 'user' or 'admin' username, where the password for the us
 An invalid login attempt will bring you to an error page. Once logged in, the 'quarkus-credential' 
 cookie is present, which gives you access to the API. For testing purposes, there is a logout method
 and API endpoints to view users and their information.
-You can run your application in dev mode that enables live coding using
 
 ### Authentication
 
