@@ -56,10 +56,7 @@ public class SecurityController {
     @Path("loggedin")
     public TemplateInstance loggedin(@Context SecurityContext sec) {
         User foundUser = User.findByUserName(sec.getUserPrincipal().getName());
-        System.out.println("Username is: " + foundUser.getUserName());
         User.update("loggedIn = true where userName = ?1", foundUser.getUserName());
-        Cookie cookie = new Cookie("user", foundUser.getUserName());
-        System.out.println(cookie.getValue());
         return loggedinTemplate.data("");
     }
 

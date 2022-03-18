@@ -1,60 +1,19 @@
-# quarkus-auth Project
+# Quarkus Authentication Service
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+# Introduction
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+This application is the authentication service, with the main goal of being used to compare against similar frameworks.
+The application allows you to login and gives you permission to make API calls. This service uses the Quarkus framework with RESTEasy Jax-RS
+for the REST API. Qute is used for the webpage templating. H2 database is used to store user information.
 
-## Running the application in dev mode
+# Running the Application in Dev Mode
 
-You can run your application in dev mode that enables live coding using:
-```shell script
+The application can be run with the shell script:
 ./mvnw compile quarkus:dev
-```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+# Usage
 
-## Packaging and running the application
-
-The application can be packaged using:
-```shell script
-./mvnw package
-```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
-```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using: 
-```shell script
-./mvnw package -Pnative
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./mvnw package -Pnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/quarkus-auth-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
-
-## Related Guides
-
-- RESTEasy Qute ([guide](https://quarkus.io/guides/qute)): Qute Templating integration for RESTEasy
-
-## Provided Code
-
-### RESTEasy Qute
-
-Create your web page using Quarkus RESTEasy & Qute
-
-[Related guide section...](https://quarkus.io/guides/qute#type-safe-templates)
+Log in with either the 'user' or 'admin' username, where the password for both is 'pass'.
+An invalid login attempt will bring you to an error page. Once logged in, the 'quarkus-credential' 
+cookie is present, which gives you access to the API. For testing purposes, there is a logout method
+and API endpoints to view users and their information.
