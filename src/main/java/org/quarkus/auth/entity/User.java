@@ -7,8 +7,6 @@ import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
-
-import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 
 @Entity

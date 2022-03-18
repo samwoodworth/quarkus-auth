@@ -24,19 +24,6 @@ public class SecurityController {
     Template errorTemplate;
 
     @GET
-    @Path("isAuth")
-    @PermitAll
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response isAuth(@QueryParam("user") String username, @Context SecurityContext sec) {
-        //Username exists
-        if (User.count("username", username) > 0) {
-            User foundUser = User.findByUserName(username);
-            return Response.ok(foundUser.isLoggedIn()).build();
-        }
-        return Response.status(Response.Status.NOT_FOUND).build();
-    }
-
-    @GET
     @PermitAll
     @Path("login")
     public TemplateInstance login() {
@@ -60,8 +47,21 @@ public class SecurityController {
         return loggedinTemplate.data("");
     }
 
+    //Used for testing to see if login status changes
+    @GET
+    @Path("isAuth")
+    @PermitAll
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response isAuth(@QueryParam("user") String username, @Context SecurityContext sec) {
+        //Checking if username exists
+        if (User.count("username", username) > 0) {
+            User foundUser = User.findByUserName(username);
+            return Response.ok(foundUser.isLoggedIn()).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
     //For testing purposes
-    //Have to use basic auth of account to logout
     @GET
     @Transactional
     @RolesAllowed({"user", "admin"})
@@ -74,7 +74,7 @@ public class SecurityController {
             User.update("loggedIn = false where userName = ?1", foundUser.getUserName());
             return Response.ok().build();
         }
-        return Response.ok().build();
+        return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
     //For testing purposes
