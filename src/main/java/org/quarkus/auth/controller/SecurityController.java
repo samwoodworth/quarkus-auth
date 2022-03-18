@@ -50,7 +50,6 @@ public class SecurityController {
         return errorTemplate.data("");
     }
 
-    //Add logout button to this page that cancels all cookies?
     @GET
     @RolesAllowed({"user", "admin"})
     @Transactional
@@ -64,6 +63,7 @@ public class SecurityController {
         return loggedinTemplate.data("");
     }
 
+    //For testing purposes
     //Have to use basic auth of account to logout
     @GET
     @Transactional
@@ -80,6 +80,7 @@ public class SecurityController {
         return Response.ok().build();
     }
 
+    //For testing purposes
     @GET
     @Path("get_users")
     @RolesAllowed({"user", "admin"})
@@ -88,6 +89,7 @@ public class SecurityController {
         return Response.ok(User.listAll()).build();
     }
 
+    //For testing purposes
     @GET
     @Path("get_user/{id}")
     @PermitAll
